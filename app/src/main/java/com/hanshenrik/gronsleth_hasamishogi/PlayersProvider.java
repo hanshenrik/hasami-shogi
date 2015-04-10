@@ -16,7 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-public class LeagueTableProvider extends ContentProvider {
+public class PlayersProvider extends ContentProvider {
     public static final String AUTHORITY = "com.hanshenrik.gronsleth_hasamishogi";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/players");
 
@@ -25,8 +25,10 @@ public class LeagueTableProvider extends ContentProvider {
     public static final String KEY_ID = "_id";
     public static final String KEY_PLAYER = "player";
     public static final String KEY_POINTS = "points";
+    public static final String KEY_DESCRIPTION = "points";
     public static final int PLAYER_COLUMN = 1;
     public static final int POINTS_COLUMN = 2;
+    public static final int DESCRIPTION_COLUMN = 3;
 
     private static final int PLAYERS = 1;
     private static final int PLAYER_ID = 2;
@@ -84,8 +86,8 @@ public class LeagueTableProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         long rowID = playersDB.insert(PLAYERS_TABLE, KEY_PLAYER, values);
         if (rowID > 0) {
-            Uri newuri = ContentUris.withAppendedId(CONTENT_URI, rowID);
-            getContext().getContentResolver().notifyChange(newuri, null);
+            Uri newUri = ContentUris.withAppendedId(CONTENT_URI, rowID);
+            getContext().getContentResolver().notifyChange(newUri, null);
             return uri;
         } else {
             throw new SQLException("Failed to insert row into " + uri);
@@ -111,8 +113,7 @@ public class LeagueTableProvider extends ContentProvider {
 
         Cursor c = qb.query(playersDB, projection, selection, selectionArgs, null, null, sort);
 
-        // register to watch for changes which are
-        // signalled by notifyChange elsewhere
+        // register to watch for changes which are signalled by notifyChange elsewhere
         c.setNotificationUri(getContext().getContentResolver(), uri);
 
         return c;
@@ -139,9 +140,11 @@ public class LeagueTableProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE " + PLAYERS_TABLE + " (" + KEY_ID
-                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_PLAYER
-                    + " TEXT," + KEY_POINTS + " TEXT);");
+            db.execSQL("CREATE TABLE " + PLAYERS_TABLE + " (" +
+                    KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    KEY_PLAYER + " TEXT," +
+                    KEY_POINTS + " INTEGER," + // TODO: not tested that INTEGER works
+                    KEY_DESCRIPTION + " TEXT);");
         }
 
         @Override
