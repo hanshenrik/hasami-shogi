@@ -18,11 +18,20 @@
         </activity>
 
         <provider
-            android:name=".LeagueTableProvider"
+            android:name=".PlayersProvider"
             android:authorities="com.hanshenrik.gronsleth_hasamishogi"
             android:enabled="true"
             android:exported="true" >
         </provider>
+
+        <activity
+            android:name=".RegisterNewPlayerActivity"
+            android:label="@string/title_activity_register_new_player"
+            android:parentActivityName=".SelectPlayerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hanshenrik.gronsleth_hasamishogi.SelectPlayerActivity" />
+        </activity>
     </application>
 
 </manifest>
