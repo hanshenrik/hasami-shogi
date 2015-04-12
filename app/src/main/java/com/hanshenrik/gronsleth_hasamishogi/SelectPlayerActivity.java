@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class SelectPlayerActivity extends ActionBarActivity {
     public static final String EXTRA_PLAYERS = "com.hanshenrik.gronsleth_hasmishogi.players";
+    private static final int GUEST_PLAYER_INDEX = 0;
     public String sep = " | "; // DEV
     private ListView player1ListView;
     private ListView player2ListView;
@@ -97,14 +98,15 @@ public class SelectPlayerActivity extends ActionBarActivity {
                 int player1 = player1ListView.getCheckedItemPosition();
                 int player2 = player2ListView.getCheckedItemPosition();
 
-                if (player1 == player2) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Cannot play against yourself.", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
+                // TODO: if statements can probably be written nicer
                 if (player1 == -1 || player2 == -1) {
                     Toast toast = Toast.makeText(getApplicationContext(),
                             "Select a player for both players.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else if (player1 == player2 && player1 != GUEST_PLAYER_INDEX) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Cannot play against yourself (unless you play as GUEST).", Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 else {
