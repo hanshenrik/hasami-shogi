@@ -14,6 +14,7 @@ public class Board {
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
+    // TODO: add win on 5 in a row. Use logic from Connect Four
 
     public Board(int numberOfPieces, int capturesToWin) {
         if (numberOfPieces != 9 && numberOfPieces != 18) {
@@ -180,6 +181,10 @@ public class Board {
         // only need to check the most recent player
         if (captures[turn-1] >= capturesToWin) return turn;
         return 0;
+    }
+
+    public int get(int x, int y) {
+        return board[y][x];
     }
 
     // DEV print board
