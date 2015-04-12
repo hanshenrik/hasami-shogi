@@ -3,8 +3,13 @@ package com.hanshenrik.gronsleth_hasamishogi;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
     public int[][] board; // not using enums because ints are more efficient!
+    public int turn = 1;
+    public int[] captures = new int[]{0, 0};
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
@@ -27,16 +32,105 @@ public class Board {
     }
 
     public boolean move(int fromX, int fromY, int toX, int toY) {
-        // validate there is a piece at source position
-        if (board[fromY][fromX] == 0) {
-            // throw new IllegalArgumentException("Source position must contain piece!");
+        try {
+            validateMove(fromX, fromY, toX, toY);
+        } catch (IllegalArgumentException e) {
+            // TODO: get error message and display
+            Log.d("CATCH", "catched");
+            e.printStackTrace();
             return false;
+        }
+
+        board[toY][toX] = board[fromY][fromX];
+        board[fromY][fromX] = 0;
+        checkCapture(toX, toY);
+        switchTurn();
+        printBoard();
+        return true;
+    }
+
+    private void checkCapture(int toX, int toY) {
+        Log.d("checkCapture", "("+toX+", "+toY+")");
+        // TODO: actually just need to check 3 directions, not the one where piece comes from, but might be easier to just check all
+
+        // TODO: optimize, compress to single loop
+        // N
+        List<int[]> capturePositions = new ArrayList<>();
+        for (int y = toY - 1; y >= 0; y--) {
+            Log.d("N", "y: "+y);
+            if (board[y][toX] == 0) break; // no piece
+            if (board[y][toX] == turn && capturePositions.size() == 0) break; // self piece
+            if (board[y][toX] != 0 && board[y][toX] != turn) { // opponent piece
+                capturePositions.add(new int[]{toX, y});
+            }
+            if (board[y][toX] == turn && capturePositions.size() > 0) { // self piece with opponent piece in between
+                performCapture(capturePositions);
+            }
+        }
+        // E
+        capturePositions.clear();
+        for (int x = toX + 1; x < BOARD_SIZE; x++) {
+            Log.d("E", "x: "+x);
+            if (board[toY][x] == 0) break; // no piece
+            if (board[toY][x] == turn && capturePositions.size() == 0) break; // self piece
+            if (board[toY][x] != 0 && board[toY][x] != turn) { // opponent piece
+                capturePositions.add(new int[]{x, toY});
+            }
+            if (board[toY][x] == turn && capturePositions.size() > 0) { // self piece with opponent piece in between
+                performCapture(capturePositions);
+            }
+        }
+
+        // S
+        capturePositions.clear();
+        for (int y = toY + 1; y < BOARD_SIZE; y++) {
+            Log.d("S", "y: "+y);
+            if (board[y][toX] == 0) break; // no piece
+            if (board[y][toX] == turn && capturePositions.size() == 0) break; // self piece
+            if (board[y][toX] != 0 && board[y][toX] != turn) { // opponent piece
+                capturePositions.add(new int[]{toX, y});
+            }
+            if (board[y][toX] == turn && capturePositions.size() > 0) { // self piece with opponent piece in between
+                performCapture(capturePositions);
+            }
+        }
+
+        // W
+        capturePositions.clear();
+        for (int x = toX - 1; x >= 0; x--) {
+            Log.d("W", "x: "+x);
+            if (board[toY][x] == 0) break; // no piece
+            if (board[toY][x] == turn && capturePositions.size() == 0) break; // self piece
+            if (board[toY][x] != 0 && board[toY][x] != turn) { // opponent piece
+                capturePositions.add(new int[]{x, toY});
+            }
+            if (board[toY][x] == turn && capturePositions.size() > 0) { // self piece with opponent piece in between
+                performCapture(capturePositions);
+            }
+        }
+    }
+
+    private void performCapture(List<int[]> capturePositions) {
+        for (int[] pos : capturePositions) {
+            Log.d("performCapture", "("+pos[0]+", "+pos[1]+")");
+            board[pos[1]][pos[0]] = 0;
+            captures[turn - 1] += 1;
+        }
+    }
+
+    private void switchTurn() {
+        this.turn = (turn == 1) ? 2 : 1;
+    }
+
+    private void validateMove(int fromX, int fromY, int toX, int toY) throws IllegalArgumentException {
+        // validate correct piece at source position
+        if (board[fromY][fromX] != turn) {
+            throw new IllegalArgumentException("Can only move own piece!");
         }
 
         // validate destination is inside board
         if ( toX < 0 || toX > BOARD_SIZE || toY < 0 || toY > BOARD_SIZE ) {
-            // throw new IllegalArgumentException("Destination must be inside board!");
-            return false;
+            throw new IllegalArgumentException("Destination must be inside board!");
         }
 
         // determine if move is horizontal or vertical
@@ -49,14 +143,12 @@ public class Board {
 
         // validate move is horizontal or vertical
         if (dirX != 0 && dirY != 0) {
-            // throw new IllegalArgumentException("Only vertical and horizontal moves are allowed.");
-            return false;
+            throw new IllegalArgumentException("Only vertical and horizontal moves are allowed.");
         }
 
         // validate move is not to same position
         if (fromX == toX && fromY == toY) {
-            // throw new IllegalArgumentException("Piece must be moved to a new position.");
-            return false;
+            throw new IllegalArgumentException("Piece must be moved to a new position.");
         }
 
         // validate no pieces in the way (inc. destination position)
@@ -65,7 +157,7 @@ public class Board {
         if (dirX != 0) { // horizontal moves
             while (x != toX) {
                 if (board[y][x+dirX] != 0) {
-                    return false;
+                    throw new IllegalArgumentException("There are pieces in the way");
                 }
                 x += dirX;
             }
@@ -73,16 +165,11 @@ public class Board {
         if (dirY != 0) {
             while (y != toY) {
                 if (board[y+dirY][x] != 0) {
-                    return false;
+                    throw new IllegalArgumentException("There are pieces in the way");
                 }
                 y += dirY;
             }
         }
-
-        board[toY][toX] = board[fromY][fromX];
-        board[fromY][fromX] = 0;
-        printBoard();
-        return true;
     }
 
     // DEV print board
