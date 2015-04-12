@@ -8,19 +8,21 @@ import java.util.List;
 
 public class Board {
     public int[][] board; // not using enums because ints are more efficient!
+    public int capturesToWin;
     public int turn = 1;
     public int[] captures = new int[]{0, 0};
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
 
-    public Board(int numberOfPieces) {
+    public Board(int numberOfPieces, int capturesToWin) {
         if (numberOfPieces != 9 && numberOfPieces != 18) {
             throw new IllegalArgumentException("Number of pieces must be 9 or 18, cannot be '" +
                     numberOfPieces + "'");
         }
 
         this.board = new int[BOARD_SIZE][BOARD_SIZE]; // all positions are now 0
+        this.capturesToWin = capturesToWin;
 
         int rowsPerPlayer = numberOfPieces / BOARD_SIZE;
         for (int i = 0; i < rowsPerPlayer; i++) {
@@ -44,8 +46,9 @@ public class Board {
         board[toY][toX] = board[fromY][fromX];
         board[fromY][fromX] = 0;
         checkCapture(toX, toY);
-        switchTurn();
+        // checkWin(); // TODO: this could set a parameter that is later checked somewhere else
         printBoard();
+        switchTurn();
         return true;
     }
 
@@ -170,6 +173,13 @@ public class Board {
                 y += dirY;
             }
         }
+    }
+
+    //
+    private int checkWin() {
+        // only need to check the most recent player
+        if (captures[turn-1] >= capturesToWin) return turn;
+        return 0;
     }
 
     // DEV print board
