@@ -32,6 +32,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hanshenrik.gronsleth_hasamishogi.SelectPlayerActivity" />
         </activity>
+        <activity
+            android:name=".GameActivity"
+            android:label="@string/title_activity_game"
+            android:parentActivityName=".SelectPlayerActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.hanshenrik.gronsleth_hasamishogi.SelectPlayerActivity" />
+        </activity>
     </application>
 
 </manifest>
