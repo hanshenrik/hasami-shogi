@@ -14,14 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 
 public class SelectPlayerActivity extends ActionBarActivity {
+    public static final String EXTRA_PLAYERS = "com.hanshenrik.gronsleth_hasmishogi.players";
+    public String sep = " | "; // DEV
     private ListView player1ListView;
     private ListView player2ListView;
-    public String sep = " | ";
     private ContentResolver cr;
     private TextView list;
 
@@ -55,6 +57,7 @@ public class SelectPlayerActivity extends ActionBarActivity {
         this.player1ListView = (ListView) findViewById(R.id.player1_usernames);
         this.player2ListView = (ListView) findViewById(R.id.player2_usernames);
         Button registerNewPlayerButton = (Button) findViewById(R.id.register_new_player_button);
+        Button playButton = (Button) findViewById(R.id.play_button);
 
         final ArrayAdapter player1ListAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_single_choice, users);
@@ -83,6 +86,32 @@ public class SelectPlayerActivity extends ActionBarActivity {
                 Log.d("REGISTER BUTTON", "clicked!");
                 Intent intent = new Intent(getApplicationContext(), RegisterNewPlayerActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("PLAY", "getCheckedItemPosition() 1: " + player1ListView.getCheckedItemPosition());
+                Log.d("PLAY", "getCheckedItemPosition() 2: " + player2ListView.getCheckedItemPosition());
+                int player1 = player1ListView.getCheckedItemPosition();
+                int player2 = player2ListView.getCheckedItemPosition();
+
+                if (player1 == player2) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Cannot play against yourself.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                if (player1 == -1 || player2 == -1) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Select a player for both players.", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else {
+                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                    intent.putExtra(EXTRA_PLAYERS, new int[]{player1, player2});
+                    startActivity(intent);
+                }
             }
         });
     }
