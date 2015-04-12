@@ -21,10 +21,30 @@
         android:layout_alignParentRight="true"
         android:text="Player 2" />
 
+
+    <Button
+        android:id="@+id/register_new_player_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register New Player"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:baselineAligned="false"
         android:layout_below="@id/player1_label"
+        android:layout_above="@id/register_new_player_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -44,19 +64,5 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/test_list"
-        android:text="TEST LIST"
-        android:layout_above="@+id/register_new_player_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/register_new_player_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register New Player"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
