@@ -1,6 +1,5 @@
 package com.hanshenrik.gronsleth_hasamishogi;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,48 +19,41 @@ import java.util.ArrayList;
 
 public class SelectPlayerActivity extends ActionBarActivity {
     public static final String EXTRA_PLAYERS = "com.hanshenrik.gronsleth_hasmishogi.players";
-    private static final int GUEST_PLAYER_INDEX = 0;
+    public static final int REGISTER_NEW_PLAYER_REQUEST = 1;
+    public static final int GUEST_PLAYER_INDEX = 0;
     public String sep = " | "; // DEV
-    private ListView player1ListView;
-    private ListView player2ListView;
-    private ContentResolver cr;
-    private TextView list;
+    private ListView player1ListView, player2ListView;
+    private ArrayAdapter player1ListAdapter, player2ListAdapter;
+    ArrayList<Player> users; // TODO: review if Player structure is necessary, can probably just query PlayersProvider if we need info
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REGISTER_NEW_PLAYER_REQUEST) {
+                Log.d("###", "From REGISTER NEW");
+                updateUserList(); // TODO: review if this can be done more efficiently
+                player1ListAdapter.notifyDataSetChanged();
+                player2ListAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_player);
 
-        ArrayList<String> users = new ArrayList<>();
-        // TODO: fetch usernames (possibly avatar) from league table content provider
-        users.add("GUEST");
-        users.add("tim");
-        users.add("tom");
-        users.add("john");
-        users.add("spa ce");
-
-//        list = (TextView) findViewById(R.id.test_list);
-//        cr = getContentResolver();
-//        Cursor c = cr.query(PlayersProvider.CONTENT_URI, null, null, null, null);
-//        int total = c.getCount();
-//        String table = "";
-//        if (c.moveToFirst()) {
-//            do {
-//                table += c.getPosition() + "  " +  c.getString(PlayersProvider.PLAYER_COLUMN) + sep
-//                        + c.getInt(PlayersProvider.POINTS_COLUMN) + sep +
-//                        c.getString(PlayersProvider.DESCRIPTION_COLUMN) + "\n";
-//            } while (c.moveToNext());
-//        }
-//        list.setText(table + "total: " + total);
+        this.users = new ArrayList<>();
+        updateUserList();
 
         this.player1ListView = (ListView) findViewById(R.id.player1_usernames);
         this.player2ListView = (ListView) findViewById(R.id.player2_usernames);
         Button registerNewPlayerButton = (Button) findViewById(R.id.register_new_player_button);
         Button playButton = (Button) findViewById(R.id.play_button);
 
-        final ArrayAdapter player1ListAdapter = new ArrayAdapter<>(this,
+        this.player1ListAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_single_choice, users);
-        final ArrayAdapter player2ListAdapter = new ArrayAdapter<>(this,
+        this.player2ListAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_single_choice, users);
         player1ListView.setAdapter(player1ListAdapter);
         player2ListView.setAdapter(player2ListAdapter);
@@ -86,7 +77,7 @@ public class SelectPlayerActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Log.d("REGISTER BUTTON", "clicked!");
                 Intent intent = new Intent(getApplicationContext(), RegisterNewPlayerActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REGISTER_NEW_PLAYER_REQUEST);
             }
         });
 
@@ -122,7 +113,30 @@ public class SelectPlayerActivity extends ActionBarActivity {
         player2ListView.setItemChecked(0, true);
 
         // DEV click play button
-        playButton.performClick();
+        //playButton.performClick();
+    }
+
+    private void updateUserList() {
+        Log.d("###", "In updateUserList");
+        this.users.clear();
+        // get players from PlayersProvider
+        Cursor cursor = getContentResolver().query(PlayersProvider.CONTENT_URI, null, null, null, null);
+
+        // TODO: put in detail view of player as DELETE button
+        //String[] playerID = {""};
+        //getContentResolver().delete(PlayersProvider.CONTENT_URI, PlayersProvider.KEY_ID, playerID);
+
+        int nameIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_PLAYER);
+        int descriptionIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_DESCRIPTION);
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(nameIdx);
+                String description = cursor.getString(descriptionIdx);
+                users.add(new Player(name, description));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        users.add(0, new Player("GUEST", "")); // TODO: avoid creating this every time
     }
 
     private void syncUsernameLists(ListView thisListView, ListView otherListView, int position) {
