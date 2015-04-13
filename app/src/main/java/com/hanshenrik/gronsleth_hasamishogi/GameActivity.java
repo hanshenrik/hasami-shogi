@@ -15,6 +15,7 @@ public class GameActivity extends ActionBarActivity {
     private GridView boardGrid;
     private ImageAdapter boardAdapter; // TODO: consider changing to drawing circles instead of using images
     private boolean isSelecting; // keep track of if user indicates which piece to move or where to put piece down
+    private View selected;
     private Board board;
     private int[] boardAsList;
     private int fromX, fromY, toX, toY;
@@ -30,7 +31,7 @@ public class GameActivity extends ActionBarActivity {
 
         // get id of players
         Intent intent = getIntent();
-        int[] players = intent.getIntArrayExtra(SelectPlayerActivity.EXTRA_PLAYERS);
+        int[] playerIDs = intent.getIntArrayExtra(SelectPlayerActivity.EXTRA_PLAYERS);
 
         boardAsList = new int[81];
         for (int i = 0; i < Board.BOARD_SIZE; i++) {
@@ -58,20 +59,26 @@ public class GameActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("BOARD GRID", "pos: "+ position + " | id: " + id);
+                int x = position % Board.BOARD_SIZE; // 8 % 9 = 8, 9 % 9 = 0
+                int y = position / Board.BOARD_SIZE; // 8/9 = 0, 10/9 = 1 when using int (floor function)
                 if (isSelecting) { // indicating which piece to move
+                    view.setAlpha(0.8f);
+                    selected = view;
                     int player = boardAsList[position];
-                    fromX = position % Board.BOARD_SIZE; // 8 % 9 = 8, 9 % 9 = 0
-                    fromY = position / Board.BOARD_SIZE; // 8/9 = 0, 10/9 = 1 when using int (floor function)
+                    fromX = x;
+                    fromY = y;
                     Log.d("BOARD GRID", "player: "+player);
                 } else { // indicating where to move selected piece
-                    toX = position % Board.BOARD_SIZE; // 8 % 9 = 8, 9 % 9 = 0
-                    toY = position / Board.BOARD_SIZE; // 8/9 = 0, 10/9 = 1 when using int (floor function)
-                    board.move(fromX, fromY, toX, toY); // TODO: make this affect the boardAsList
+                    toX = x;
+                    toY = y;
+                    board.move(fromX, fromY, toX, toY);
+                    // TODO: make this affect the boardAsList in a nicer way
                     for (int i = 0; i < Board.BOARD_SIZE; i++) {
                         for (int j = 0; j < Board.BOARD_SIZE; j++) {
                             boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
                         }
                     }
+                    selected.setAlpha(1);
                     boardAdapter.notifyDataSetChanged();
                 }
                 isSelecting = !isSelecting;
