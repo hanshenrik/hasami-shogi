@@ -9,10 +9,18 @@ public class Player {
     public int points;
     public final Image avatar;
 
+    public Player(String name, String description) {
+        this(name, description, null); // TODO: set to default image instead of null
+    }
+
     public Player(String name, String description, Image avatar) {
         this.name = name;
         this.description = description;
         this.points = 0;
         this.avatar = avatar;
+    }
+
+    public String toString() {
+        return this.name;
     }
 }
