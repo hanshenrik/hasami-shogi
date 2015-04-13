@@ -116,6 +116,13 @@ public class SelectPlayerActivity extends ActionBarActivity {
                 }
             }
         });
+
+        // set GUEST as selected by default
+        player1ListView.setItemChecked(0, true);
+        player2ListView.setItemChecked(0, true);
+
+        // DEV click play button
+        playButton.performClick();
     }
 
     private void syncUsernameLists(ListView thisListView, ListView otherListView, int position) {
