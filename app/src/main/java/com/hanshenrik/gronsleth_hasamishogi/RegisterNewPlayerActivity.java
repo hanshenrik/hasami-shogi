@@ -2,6 +2,7 @@ package com.hanshenrik.gronsleth_hasamishogi;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,10 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
                 values.put(PlayersProvider.KEY_DESCRIPTION, description);
                 // TODO: add avatar somehow. Address to file on device? (must ask for permission like in practical)
                 cr.insert(PlayersProvider.CONTENT_URI, values);
+
+                Intent result = new Intent();
+                setResult(RESULT_OK, result);
+                finish();
             }
         });
     }
