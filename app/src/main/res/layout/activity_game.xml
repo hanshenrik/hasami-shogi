@@ -12,6 +12,10 @@
         android:id="@+id/board_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:horizontalSpacing="2dp"
+        android:verticalSpacing="2dp"
+        android:background="#000"
         android:numColumns="9" />
 
 </LinearLayout>
