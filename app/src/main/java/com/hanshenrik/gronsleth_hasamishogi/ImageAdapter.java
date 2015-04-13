@@ -28,8 +28,8 @@ public class ImageAdapter extends BaseAdapter {
             // attributes
             imageView = new ImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            imageView.setAdjustViewBounds(true); // needed to adjust height, might not be needed if canvas used instead of images
         } else {
             imageView = (ImageView) convertView;
         }
@@ -41,6 +41,7 @@ public class ImageAdapter extends BaseAdapter {
             case 2:
                 imageView.setImageResource(R.drawable.sign2);
                 break;
+            case 0:
             default:
                 imageView.setImageResource(R.drawable.sign0);
                 break;
