@@ -1,6 +1,8 @@
 package com.hanshenrik.gronsleth_hasamishogi;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import java.util.Map;
 
 
 public class GameActivity extends ActionBarActivity {
@@ -84,6 +88,23 @@ public class GameActivity extends ActionBarActivity {
                 isSelecting = !isSelecting;
             }
         });
+
+
+        //setting preferences
+//        SharedPreferences prefs = this.getSharedPreferences(getString(R.string.pref_key_dai_version), Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putString("key", "test");
+//        editor.commit();
+
+        //getting preferences
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        Map<String,?> map = prefs.getAll();
+        for (String key : map.keySet()) {
+            Log.d("MAP", key + " | " + map.get(key).toString());
+        }
+
+
         // testMoves();
     }
 
@@ -123,6 +144,16 @@ public class GameActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Log.d("#options", "settings");
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_league_table) {
+            Log.d("#options", "league table");
+            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+            startActivity(intent);
             return true;
         }
 

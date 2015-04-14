@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_league_table">League Table</string>
 
     <string name="title_activity_register_new_player">RegisterNewPlayerActivity</string>
     <string name="username_hint">Username..</string>
