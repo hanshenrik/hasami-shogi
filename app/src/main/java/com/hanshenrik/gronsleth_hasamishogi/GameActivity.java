@@ -16,12 +16,11 @@ import java.util.Map;
 
 
 public class GameActivity extends ActionBarActivity {
-    private GridView boardGrid;
     private ImageAdapter boardAdapter; // TODO: consider changing to drawing circles instead of using images
-    private boolean isSelecting; // keep track of if user indicates which piece to move or where to put piece down
+    private boolean isSelecting; // keep track of if user indicates which piece to move or where to put selected piece down
     private View selected;
     private Board board;
-    private int[] boardAsList;
+    private int[] boardAsList = new int[81]; // TODO: review structure
     private int fromX, fromY, toX, toY;
 
     @Override
@@ -29,20 +28,20 @@ public class GameActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        this.isSelecting = true;
-        // DEV
-        this.board = new Board(18, 17);
-
         // get id of players
         Intent intent = getIntent();
         int[] playerIDs = intent.getIntArrayExtra(SelectPlayerActivity.EXTRA_PLAYERS);
 
-        boardAsList = new int[81];
+        isSelecting = true;
+        // DEV
+        board = new Board(18, 17);
+
         for (int i = 0; i < Board.BOARD_SIZE; i++) {
             for (int j = 0; j < Board.BOARD_SIZE; j++) {
                 boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
             }
         }
+
         // DEV
         String s = "| ";
         Log.d("###", "boardAsList.length: " + boardAsList.length);
@@ -55,14 +54,14 @@ public class GameActivity extends ActionBarActivity {
         }
         Log.d("###", s);
 
-        this.boardGrid = (GridView) findViewById(R.id.board_grid);
+        GridView boardGrid = (GridView) findViewById(R.id.board_grid);
         boardAdapter = new ImageAdapter(this, boardAsList);
         boardGrid.setAdapter(boardAdapter);
 
         boardGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("BOARD GRID", "pos: "+ position + " | id: " + id);
+                Log.d("BOARD GRID", "pos: " + position + " | id: " + id);
                 int x = position % Board.BOARD_SIZE; // 8 % 9 = 8, 9 % 9 = 0
                 int y = position / Board.BOARD_SIZE; // 8/9 = 0, 10/9 = 1 when using int (floor function)
                 if (isSelecting) { // indicating which piece to move
@@ -71,7 +70,7 @@ public class GameActivity extends ActionBarActivity {
                     int player = boardAsList[position];
                     fromX = x;
                     fromY = y;
-                    Log.d("BOARD GRID", "player: "+player);
+                    Log.d("BOARD GRID", "player: " + player);
                 } else { // indicating where to move selected piece
                     toX = x;
                     toY = y;
@@ -79,7 +78,7 @@ public class GameActivity extends ActionBarActivity {
                     // TODO: make this affect the boardAsList in a nicer way
                     for (int i = 0; i < Board.BOARD_SIZE; i++) {
                         for (int j = 0; j < Board.BOARD_SIZE; j++) {
-                            boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
+                            boardAsList[i * Board.BOARD_SIZE + j] = board.get(j, i);
                         }
                     }
                     selected.setAlpha(1);
@@ -142,18 +141,25 @@ public class GameActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Log.d("#options", "settings");
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(intent);
             return true;
-        }
+        } else if (id == R.id.action_league_table) {
+//            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+//            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_restart) {
+            isSelecting = true;
+            board = new Board(18, 17); // TODO: remove hardcoded values
 
-        if (id == R.id.action_league_table) {
-            Log.d("#options", "league table");
-            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-            startActivity(intent);
+            // TODO: optimize, extract to method as this is duplicated code
+            for (int i = 0; i < Board.BOARD_SIZE; i++) {
+                for (int j = 0; j < Board.BOARD_SIZE; j++) {
+                    boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
+                }
+            }
+            boardAdapter.notifyDataSetChanged();
             return true;
         }
 
