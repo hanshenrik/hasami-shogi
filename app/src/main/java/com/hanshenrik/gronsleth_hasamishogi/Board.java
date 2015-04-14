@@ -11,6 +11,7 @@ public class Board {
     public int capturesToWin;
     public int turn = 1;
     public int[] captures = new int[] { 0, 0 };
+    public boolean isTouched = false;
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
@@ -35,6 +36,7 @@ public class Board {
     }
 
     public boolean move(int fromX, int fromY, int toX, int toY) {
+        isTouched = true; // TODO: is there a way do only do this first time?
         try {
             validateMove(fromX, fromY, toX, toY);
         } catch (IllegalArgumentException e) {
