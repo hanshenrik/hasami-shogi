@@ -1,9 +1,13 @@
 package com.hanshenrik.gronsleth_hasamishogi;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -55,7 +59,7 @@ public class GameActivity extends ActionBarActivity {
 
         // get id of players
         Intent intent = getIntent();
-        int[] playerIDs = intent.getIntArrayExtra(SelectPlayerActivity.EXTRA_PLAYERS);
+        final int[] playerIDs = intent.getIntArrayExtra(SelectPlayerActivity.EXTRA_PLAYERS);
 
         updatePreferences();
         setupGame();
@@ -93,6 +97,37 @@ public class GameActivity extends ActionBarActivity {
 
                     // display dialog if winner exists
                     if (board.winner != 0) {
+                        int winnerID = playerIDs[board.winner-1];
+                        Log.d("win", winnerID +"");
+                        // update winner's points, if both players registered
+                        if (playerIDs[0] != SelectPlayerActivity.GUEST_PLAYER_INDEX &&
+                            playerIDs[1] != SelectPlayerActivity.GUEST_PLAYER_INDEX) {
+                            Log.d("win", "no GUEST");
+                            Uri uri = Uri.parse(PlayersProvider.CONTENT_URI + "/" + winnerID);
+                            Log.d("win", "uri: " + uri);
+                            ContentResolver cr = getContentResolver();
+                            ContentValues values = new ContentValues();
+
+                            // TODO: get current points
+//                            Cursor cursor = cr.query(uri, null, null, null, null);
+//                            int pointsIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_POINTS);
+//                            int points = 99; // to validate we actually set the value in do {...}, should be very low
+//                            if (cursor.moveToFirst()) {
+//                                Log.d("cursor", "moveToFirst");
+//                                do {
+//                                    points = cursor.getInt(pointsIdx);
+//                                    Log.d("cursor", points + "");
+//                                } while (cursor.moveToNext());
+//                            }
+//                            Log.d("points + 1", points + 1 + "");
+
+                            // TODO: update PlayersProvider, increase winner's points
+//                            values.put(PlayersProvider.KEY_POINTS, points + 1);
+//                            String[] where = {""};
+//                            cr.update(uri, values, "", where);
+//                            Log.d("win", "");
+//                            cursor.close();
+                        }
                         new AlertDialog.Builder(GameActivity.this)
                                 .setTitle("Game Over!")
                                 .setMessage("Player " + board.winner + " won! Play again?")
