@@ -1,5 +1,7 @@
 package com.hanshenrik.gronsleth_hasamishogi;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -79,14 +81,35 @@ public class GameActivity extends ActionBarActivity {
                     toX = x;
                     toY = y;
                     board.move(fromX, fromY, toX, toY);
+
                     // TODO: make this affect the boardAsList in a nicer way
                     for (int i = 0; i < Board.BOARD_SIZE; i++) {
                         for (int j = 0; j < Board.BOARD_SIZE; j++) {
                             boardAsList[i * Board.BOARD_SIZE + j] = board.get(j, i);
                         }
                     }
-                    selected.setAlpha(1);
                     boardAdapter.notifyDataSetChanged();
+                    selected.setAlpha(1);
+
+                    // display dialog if winner exists
+                    if (board.winner != 0) {
+                        new AlertDialog.Builder(GameActivity.this)
+                                .setTitle("Game Over!")
+                                .setMessage("Player " + board.winner + " won! Play again?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        setupGame();
+                                        boardAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_info)
+                                .show();
+                    }
                 }
                 isSelecting = !isSelecting;
             }
