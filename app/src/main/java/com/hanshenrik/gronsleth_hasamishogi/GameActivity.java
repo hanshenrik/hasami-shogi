@@ -16,12 +16,35 @@ import java.util.Map;
 
 
 public class GameActivity extends ActionBarActivity {
+    public static final int SETTINGS_REQUEST = 2;
+    private static final int DEFAULT_NUMBER_OF_PIECES = 9;
+    private static final int DAI_NUMBER_OF_PIECES = 18;
     private ImageAdapter boardAdapter; // TODO: consider changing to drawing circles instead of using images
     private boolean isSelecting; // keep track of if user indicates which piece to move or where to put selected piece down
     private View selected;
     private Board board;
     private int[] boardAsList = new int[81]; // TODO: review structure
     private int fromX, fromY, toX, toY;
+    private boolean isDaiVersion, isFiveInARowRule;
+    private int numberOfPieces, capturesToWin;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("1", "");
+        if (resultCode == RESULT_CANCELED) {
+            Log.d("2", "");
+            if (requestCode == SETTINGS_REQUEST) {
+                Log.d("3", "");
+                updatePreferences();
+                // setup new game with given preferences only if no moves have been made
+                if (!board.isTouched) {
+                    Log.d("!isTouched", "");
+                    setupGame();
+                }
+                boardAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,27 +55,8 @@ public class GameActivity extends ActionBarActivity {
         Intent intent = getIntent();
         int[] playerIDs = intent.getIntArrayExtra(SelectPlayerActivity.EXTRA_PLAYERS);
 
-        isSelecting = true;
-        // DEV
-        board = new Board(18, 17);
-
-        for (int i = 0; i < Board.BOARD_SIZE; i++) {
-            for (int j = 0; j < Board.BOARD_SIZE; j++) {
-                boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
-            }
-        }
-
-        // DEV
-        String s = "| ";
-        Log.d("###", "boardAsList.length: " + boardAsList.length);
-        for (int i = 0; i < boardAsList.length; i++) {
-            if (i % 9 == 0 && i != 0) {
-                Log.d("###", s);
-                s = "| ";
-            }
-            s += boardAsList[i] + " | ";
-        }
-        Log.d("###", s);
+        updatePreferences();
+        setupGame();
 
         GridView boardGrid = (GridView) findViewById(R.id.board_grid);
         boardAdapter = new ImageAdapter(this, boardAsList);
@@ -65,7 +69,7 @@ public class GameActivity extends ActionBarActivity {
                 int x = position % Board.BOARD_SIZE; // 8 % 9 = 8, 9 % 9 = 0
                 int y = position / Board.BOARD_SIZE; // 8/9 = 0, 10/9 = 1 when using int (floor function)
                 if (isSelecting) { // indicating which piece to move
-                    view.setAlpha(0.8f);
+                    view.setAlpha(0.7f);
                     selected = view;
                     int player = boardAsList[position];
                     fromX = x;
@@ -95,16 +99,35 @@ public class GameActivity extends ActionBarActivity {
 //        editor.putString("key", "test");
 //        editor.commit();
 
-        //getting preferences
+        // testMoves();
+    }
 
+    private void setupGame() {
+        Log.d("setup", "creating game with " + numberOfPieces + " pieces, "+capturesToWin
+                +" captures and isFiveInARowRule: " +isFiveInARowRule +", isDaiVersion: "
+                + isDaiVersion);
+        isSelecting = true;
+        board = new Board(numberOfPieces, capturesToWin); // TODO: add isFiveInARowRule to Board constructor
+        for (int i = 0; i < Board.BOARD_SIZE; i++) {
+            for (int j = 0; j < Board.BOARD_SIZE; j++) {
+                boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
+            }
+        }
+    }
+
+    private void updatePreferences() {
+        // get preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        Map<String,?> map = prefs.getAll();
-        for (String key : map.keySet()) {
-            Log.d("MAP", key + " | " + map.get(key).toString());
+        Map<String, ?> prefsMap = prefs.getAll();
+        for (String key : prefsMap.keySet()) {
+            Log.d("MAP", key + " | " + prefsMap.get(key).toString());
         }
 
+        isDaiVersion = (Boolean) prefsMap.get(getString(R.string.pref_key_dai_version));
+        isFiveInARowRule = (Boolean) prefsMap.get(getString(R.string.pref_key_five_in_a_row_rule));
+        capturesToWin = Integer.parseInt( (String) prefsMap.get(getString(R.string.pref_key_captures_to_win)));
 
-        // testMoves();
+        numberOfPieces = isDaiVersion ? DAI_NUMBER_OF_PIECES : DEFAULT_NUMBER_OF_PIECES;
     }
 
     private void testMoves() { // DEV
@@ -143,22 +166,15 @@ public class GameActivity extends ActionBarActivity {
 
         if (id == R.id.action_settings) {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, SETTINGS_REQUEST);
             return true;
         } else if (id == R.id.action_league_table) {
 //            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
 //            startActivity(intent);
             return true;
         } else if (id == R.id.action_restart) {
-            isSelecting = true;
-            board = new Board(18, 17); // TODO: remove hardcoded values
-
-            // TODO: optimize, extract to method as this is duplicated code
-            for (int i = 0; i < Board.BOARD_SIZE; i++) {
-                for (int j = 0; j < Board.BOARD_SIZE; j++) {
-                    boardAsList[i*Board.BOARD_SIZE + j] = board.get(j, i);
-                }
-            }
+            updatePreferences();
+            setupGame();
             boardAdapter.notifyDataSetChanged();
             return true;
         }
