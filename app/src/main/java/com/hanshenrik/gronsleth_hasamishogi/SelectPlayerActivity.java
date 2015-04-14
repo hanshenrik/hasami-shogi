@@ -2,6 +2,7 @@ package com.hanshenrik.gronsleth_hasamishogi;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -86,6 +87,7 @@ public class SelectPlayerActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Log.d("PLAY", "getCheckedItemPosition() 1: " + player1ListView.getCheckedItemPosition());
                 Log.d("PLAY", "getCheckedItemPosition() 2: " + player2ListView.getCheckedItemPosition());
+                // TODO: NB! index in list is not same as ID in DB. Need to fetch that ID., and send it to GameActivity
                 int player1 = player1ListView.getCheckedItemPosition();
                 int player2 = player2ListView.getCheckedItemPosition();
 
@@ -123,8 +125,8 @@ public class SelectPlayerActivity extends ActionBarActivity {
         Cursor cursor = getContentResolver().query(PlayersProvider.CONTENT_URI, null, null, null, null);
 
         // TODO: put in detail view of player as DELETE button
-        //String[] playerID = {""};
-        //getContentResolver().delete(PlayersProvider.CONTENT_URI, PlayersProvider.KEY_ID, playerID);
+        //getContentResolver().delete(Uri.parse(PlayersProvider.CONTENT_URI + "/5"), null, null);
+        // NB! /# is ID in DB
 
         int nameIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_PLAYER);
         int descriptionIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_DESCRIPTION);
