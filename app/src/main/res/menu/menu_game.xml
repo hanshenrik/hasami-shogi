@@ -6,4 +6,6 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/action_league_table" android:title="@string/action_league_table"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_restart" android:title="@string/action_restart"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>
