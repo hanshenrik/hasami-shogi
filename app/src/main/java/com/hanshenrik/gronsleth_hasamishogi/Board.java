@@ -15,7 +15,7 @@ public class Board {
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
-    // TODO: add win on 5 in a row. Use logic from Connect Four
+    public int winner = 0;
 
     public Board(int numberOfPieces, int capturesToWin) {
         if (numberOfPieces != 9 && numberOfPieces != 18) {
@@ -37,6 +37,10 @@ public class Board {
 
     public boolean move(int fromX, int fromY, int toX, int toY) {
         isTouched = true; // TODO: is there a way do only do this first time?
+        if (winner != 0) {
+            Log.d("###", "Game is over, man!");
+            return false;
+        }
         try {
             validateMove(fromX, fromY, toX, toY);
         } catch (IllegalArgumentException e) {
@@ -49,7 +53,7 @@ public class Board {
         board[toY][toX] = board[fromY][fromX];
         board[fromY][fromX] = 0;
         checkCapture(toX, toY);
-        // checkWin(); // TODO: this could set a parameter that is later checked somewhere else
+        checkWin(); // TODO: this could set a parameter that is later checked somewhere else
         printBoard();
         switchTurn();
         return true;
@@ -178,12 +182,13 @@ public class Board {
         }
     }
 
-    // returns id of winning player, 0 if no winner
-    private int checkWin() {
+    private void checkWin() {
         // only need to check the most recent player
-        if (captures[turn-1] >= capturesToWin) return turn;
-        // TODO: implement 5 in a row logic
-        return 0;
+        if (captures[turn-1] >= capturesToWin) {
+            Log.d("checkWin", turn + " won!");
+            winner = turn;
+        }
+        // TODO: implement 5 in a row logic, use logic from Connect Four
     }
 
     public int get(int x, int y) {
