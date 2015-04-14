@@ -1,0 +1,23 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="@string/pref_key_dai_version"
+        android:title="@string/pref_title_dai_version"
+        android:summary="@string/pref_description_dai_version"
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="@string/pref_key_five_in_a_row_rule"
+        android:dependency="@string/pref_key_dai_version"
+        android:title="@string/pref_title_five_in_a_row_rule"
+        android:summary="@string/pref_description_five_in_a_row_rule"
+        android:defaultValue="false" />
+
+    <ListPreference
+        android:key="@string/pref_key_captures_to_win"
+        android:title="@string/pref_title_captures_to_win"
+        android:summary="%s"
+        android:entries="@array/pref_captures_to_win_list_entries_normal"
+        android:entryValues="@array/pref_captures_to_win_list_values_normal" />
+
+</PreferenceScreen>

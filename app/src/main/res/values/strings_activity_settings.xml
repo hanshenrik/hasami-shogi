@@ -1,0 +1,79 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_key_dai_version">dai_version_checkbox</string>
+    <string name="pref_title_dai_version">Dai Hasami Shogi</string>
+    <string name="pref_description_dai_version">Each player has 18 instead of 9 pieces</string>
+
+    <string name="pref_key_five_in_a_row_rule">five_in_a_row_rule_checkbox</string>
+    <string name="pref_title_five_in_a_row_rule">5 in a row rule</string>
+    <string name="pref_description_five_in_a_row_rule">5 pieces in a row either horizontally,
+        vertically or diagonally, not intersecting with the two starting rows of either player,
+        wins the game.
+    </string>
+
+    <string name="pref_key_captures_to_win">captures_to_win_list</string>
+    <string name="pref_title_captures_to_win">Number of captures to win</string>
+    <string-array name="pref_captures_to_win_list_entries_normal">
+        <item>1 piece</item>
+        <item>2 pieces</item>
+        <item>3 pieces</item>
+        <item>4 pieces</item>
+        <item>5 pieces</item>
+        <item>6 pieces</item>
+        <item>7 pieces</item>
+        <item>8 pieces</item>
+    </string-array>
+    <string-array name="pref_captures_to_win_list_values_normal">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="pref_captures_to_win_list_entries_dai">
+        <item>1 piece</item>
+        <item>2 pieces</item>
+        <item>3 pieces</item>
+        <item>4 pieces</item>
+        <item>5 pieces</item>
+        <item>6 pieces</item>
+        <item>7 pieces</item>
+        <item>8 pieces</item>
+        <item>9 pieces</item>
+        <item>10 pieces</item>
+        <item>11 pieces</item>
+        <item>12 pieces</item>
+        <item>13 pieces</item>
+        <item>14 pieces</item>
+        <item>15 pieces</item>
+        <item>16 pieces</item>
+        <item>17 pieces</item>
+    </string-array>
+    <string-array name="pref_captures_to_win_list_values_dai">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+    </string-array>
+
+</resources>
