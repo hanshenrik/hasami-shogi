@@ -10,7 +10,7 @@ public class Board {
     public int[][] board; // not using enums because ints are more efficient!
     public int capturesToWin;
     public int turn = 1;
-    public int[] captures = new int[]{0, 0};
+    public int[] captures = new int[] { 0, 0 };
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
@@ -176,10 +176,11 @@ public class Board {
         }
     }
 
-    //
+    // returns id of winning player, 0 if no winner
     private int checkWin() {
         // only need to check the most recent player
         if (captures[turn-1] >= capturesToWin) return turn;
+        // TODO: implement 5 in a row logic
         return 0;
     }
 
