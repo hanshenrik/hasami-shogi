@@ -22,16 +22,15 @@ public class SelectPlayerActivity extends ActionBarActivity {
     public static final String EXTRA_PLAYERS = "com.hanshenrik.gronsleth_hasmishogi.players";
     public static final int REGISTER_NEW_PLAYER_REQUEST = 1;
     public static final int GUEST_PLAYER_INDEX = 0;
-    public String sep = " | "; // DEV
     private ListView player1ListView, player2ListView;
     private ArrayAdapter player1ListAdapter, player2ListAdapter;
-    ArrayList<Player> users; // TODO: review if Player structure is necessary, can probably just query PlayersProvider if we need info
+    private ArrayList<String> users; // TODO: review if Player structure is necessary, can probably just query PlayersProvider if we need info
+    private ArrayList<Integer> userIds;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             if (requestCode == REGISTER_NEW_PLAYER_REQUEST) {
-                Log.d("###", "From REGISTER NEW");
                 updateUserList(); // TODO: review if this can be done more efficiently
                 player1ListAdapter.notifyDataSetChanged();
                 player2ListAdapter.notifyDataSetChanged();
@@ -45,6 +44,7 @@ public class SelectPlayerActivity extends ActionBarActivity {
         setContentView(R.layout.activity_select_player);
 
         this.users = new ArrayList<>();
+        this.userIds = new ArrayList<>();
         updateUserList();
 
         this.player1ListView = (ListView) findViewById(R.id.player1_usernames);
@@ -76,7 +76,6 @@ public class SelectPlayerActivity extends ActionBarActivity {
         registerNewPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("REGISTER BUTTON", "clicked!");
                 Intent intent = new Intent(getApplicationContext(), RegisterNewPlayerActivity.class);
                 startActivityForResult(intent, REGISTER_NEW_PLAYER_REQUEST);
             }
@@ -85,11 +84,8 @@ public class SelectPlayerActivity extends ActionBarActivity {
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("PLAY", "getCheckedItemPosition() 1: " + player1ListView.getCheckedItemPosition());
-                Log.d("PLAY", "getCheckedItemPosition() 2: " + player2ListView.getCheckedItemPosition());
-                // TODO: NB! index in list is not same as ID in DB. Need to fetch that ID., and send it to GameActivity
-                int player1 = users.get(player1ListView.getCheckedItemPosition()).id;
-                int player2 = users.get(player2ListView.getCheckedItemPosition()).id;
+                int player1 = userIds.get(player1ListView.getCheckedItemPosition());
+                int player2 = userIds.get(player2ListView.getCheckedItemPosition());
 
                 // TODO: if statements can probably be written nicer
                 if (player1 == -1 || player2 == -1) {
@@ -111,13 +107,9 @@ public class SelectPlayerActivity extends ActionBarActivity {
         // set GUEST as selected by default
         player1ListView.setItemChecked(0, true);
         player2ListView.setItemChecked(0, true);
-
-        // DEV click play button
-        //playButton.performClick();
     }
 
     private void updateUserList() {
-        Log.d("###", "In updateUserList");
         this.users.clear();
         // get players from PlayersProvider
         Cursor cursor = getContentResolver().query(PlayersProvider.CONTENT_URI, null, null, null, null);
@@ -125,35 +117,30 @@ public class SelectPlayerActivity extends ActionBarActivity {
         // To delete player: getContentResolver().delete(Uri.parse(PlayersProvider.CONTENT_URI + "/3"), null, null);
         // NB! /# is ID in DB
 
-        // TODO: only need name and id
         int idIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_ID);
         int nameIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_PLAYER);
-        int descriptionIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_DESCRIPTION);
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(idIdx);
-                Log.d("###", "id: " +id);
                 String name = cursor.getString(nameIdx);
-                String description = cursor.getString(descriptionIdx);
-                users.add(new Player(id, name, description, 0, ""));
+                users.add(name);
+                userIds.add(id);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        users.add(0, new Player(0, "GUEST", "", 0, "")); // TODO: avoid creating this every time
+        users.add(0, "GUEST"); // TODO: avoid creating this every time
+        userIds.add(0, 0); // TODO: avoid creating this every time
     }
 
     private void syncUsernameLists(ListView thisListView, ListView otherListView, int position) {
         if (!thisListView.getChildAt(position).isEnabled()) {
             // TODO: don't draw selected box
-            Log.d("SYNC", "not enabled");
             return;
         }
-        String username = thisListView.getItemAtPosition(position).toString();
         for (int i = 0; i < thisListView.getChildCount(); i++) {
             otherListView.getChildAt(i).setEnabled(true);
         }
         if (position != 0) {
-            Log.d("SYNC", username + sep + position + sep + otherListView.getChildAt(position));
             otherListView.getChildAt(position).setEnabled(false);
         }
     }
