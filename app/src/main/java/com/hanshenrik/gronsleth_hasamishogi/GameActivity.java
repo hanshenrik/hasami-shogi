@@ -109,24 +109,24 @@ public class GameActivity extends ActionBarActivity {
                             ContentValues values = new ContentValues();
 
                             // TODO: get current points
-//                            Cursor cursor = cr.query(uri, null, null, null, null);
-//                            int pointsIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_POINTS);
-//                            int points = 99; // to validate we actually set the value in do {...}, should be very low
-//                            if (cursor.moveToFirst()) {
-//                                Log.d("cursor", "moveToFirst");
-//                                do {
-//                                    points = cursor.getInt(pointsIdx);
-//                                    Log.d("cursor", points + "");
-//                                } while (cursor.moveToNext());
-//                            }
-//                            Log.d("points + 1", points + 1 + "");
+                            Cursor cursor = cr.query(uri, null, null, null, null);
+                            int pointsIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_POINTS);
+                            int points = 99; // to validate we actually set the value in do {...}, should be very low
+                            if (cursor.moveToFirst()) {
+                                Log.d("cursor", "moveToFirst");
+                                do {
+                                    points = cursor.getInt(pointsIdx);
+                                    Log.d("cursor", points + "");
+                                } while (cursor.moveToNext());
+                            }
+                            Log.d("points + 1", points + 1 + "");
 
                             // TODO: update PlayersProvider, increase winner's points
-//                            values.put(PlayersProvider.KEY_POINTS, points + 1);
-//                            String[] where = {""};
-//                            cr.update(uri, values, "", where);
-//                            Log.d("win", "");
-//                            cursor.close();
+                            values.put(PlayersProvider.KEY_POINTS, points + 1);
+                            String[] where = {""};
+                            cr.update(uri, values, null, null);
+                            Log.d("win", "");
+                            cursor.close();
                         }
                         new AlertDialog.Builder(GameActivity.this)
                                 .setTitle("Game Over!")
@@ -227,8 +227,8 @@ public class GameActivity extends ActionBarActivity {
             startActivityForResult(intent, SETTINGS_REQUEST);
             return true;
         } else if (id == R.id.action_league_table) {
-//            Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-//            startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), LeagueTableActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_restart) {
             updatePreferences();
