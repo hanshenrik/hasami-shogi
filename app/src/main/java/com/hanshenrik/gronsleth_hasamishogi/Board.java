@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    public int[][] board; // not using enums because ints are more efficient!
-    public int capturesToWin;
-    public int turn = 1;
-    public int[] captures = new int[] { 0, 0 };
-    public boolean isTouched = false;
     public final static int PLAYER1 = 1;
     public final static int PLAYER2 = 2;
     public final static int BOARD_SIZE = 9;
+    public int[][] board; // not using enums because ints are more efficient
+    public int capturesToWin;
+    public int[] captures = new int[] { 0, 0 };
+    public int turn = 1;
     public int winner = 0;
+    public boolean isTouched = false;
 
     public Board(int numberOfPieces, int capturesToWin) {
         if (numberOfPieces != 9 && numberOfPieces != 18) {
@@ -23,7 +23,7 @@ public class Board {
                     numberOfPieces + "'");
         }
 
-        this.board = new int[BOARD_SIZE][BOARD_SIZE]; // all positions are now 0
+        board = new int[BOARD_SIZE][BOARD_SIZE]; // all positions are now 0
         this.capturesToWin = capturesToWin;
 
         int rowsPerPlayer = numberOfPieces / BOARD_SIZE;
@@ -36,7 +36,7 @@ public class Board {
     }
 
     public String move(int fromX, int fromY, int toX, int toY) {
-        isTouched = true; // TODO: is there a way do only do this first time?
+        isTouched = true;
         if (winner != 0) {
             return "Game is over, man!";
         }
@@ -49,19 +49,16 @@ public class Board {
         board[toY][toX] = board[fromY][fromX];
         board[fromY][fromX] = 0;
         checkCapture(toX, toY);
-        checkWin(); // TODO: this could set a parameter that is later checked somewhere else
-        printBoard();
+        checkWin();
         switchTurn();
         return null;
     }
 
     private void checkCapture(int toX, int toY) {
         Log.d("checkCapture", "("+toX+", "+toY+")");
-        // TODO: actually just need to check 3 directions, not the one where piece comes from, but might be easier to just check all
-
-        // TODO: optimize, compress to single loop
-        // N
         List<int[]> capturePositions = new ArrayList<>();
+
+        // N
         for (int y = toY - 1; y >= 0; y--) {
             Log.d("N", "y: "+y);
             if (board[y][toX] == 0) break; // no piece
@@ -73,6 +70,7 @@ public class Board {
                 performCapture(capturePositions);
             }
         }
+
         // E
         capturePositions.clear();
         for (int x = toX + 1; x < BOARD_SIZE; x++) {
@@ -118,7 +116,6 @@ public class Board {
 
     private void performCapture(List<int[]> capturePositions) {
         for (int[] pos : capturePositions) {
-            Log.d("performCapture", "("+pos[0]+", "+pos[1]+")");
             board[pos[1]][pos[0]] = 0;
             captures[turn - 1] += 1;
         }
@@ -158,7 +155,6 @@ public class Board {
         }
 
         // validate no pieces in the way (inc. destination position)
-        // TODO: clean up; compress into single while loop
         int x = fromX, y = fromY;
         if (dirX != 0) { // horizontal moves
             while (x != toX) {
@@ -168,7 +164,7 @@ public class Board {
                 x += dirX;
             }
         }
-        if (dirY != 0) {
+        if (dirY != 0) { // vertical moves
             while (y != toY) {
                 if (board[y+dirY][x] != 0) {
                     throw new IllegalArgumentException("There are pieces in the way");
@@ -181,9 +177,9 @@ public class Board {
     private void checkWin() {
         // only need to check the most recent player
         if (captures[turn-1] >= capturesToWin) {
-            Log.d("checkWin", turn + " won!");
             winner = turn;
         }
+
         // TODO: implement 5 in a row logic, use logic from Connect Four
     }
 
@@ -191,16 +187,16 @@ public class Board {
         return board[y][x];
     }
 
-    // DEV print board
-    public void printBoard() {
-        Log.d("###", "################");
-        for (int i = 0; i < board.length; i++) {
-            String s = "| ";
-            for (int j = 0; j < board[i].length; j++) {
-                s += board[i][j] + " | ";
-            }
-            Log.d("BOARD",  s);
-        }
-        Log.d("###", "################");
-    }
+//    // DEV print board
+//    public void printBoard() {
+//        Log.d("###", "################");
+//        for (int i = 0; i < board.length; i++) {
+//            String s = "| ";
+//            for (int j = 0; j < board[i].length; j++) {
+//                s += board[i][j] + " | ";
+//            }
+//            Log.d("BOARD",  s);
+//        }
+//        Log.d("###", "################");
+//    }
 }
