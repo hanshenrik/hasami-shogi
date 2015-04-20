@@ -2,10 +2,8 @@ package com.hanshenrik.gronsleth_hasamishogi;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +22,7 @@ public class SelectPlayerActivity extends ActionBarActivity {
     public static final int GUEST_PLAYER_INDEX = 0;
     private ListView player1ListView, player2ListView;
     private ArrayAdapter player1ListAdapter, player2ListAdapter;
-    private ArrayList<String> users; // TODO: review if Player structure is necessary, can probably just query PlayersProvider if we need info
+    private ArrayList<String> users;
     private ArrayList<Integer> userIds;
 
     @Override
@@ -43,19 +41,17 @@ public class SelectPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_player);
 
-        this.users = new ArrayList<>();
-        this.userIds = new ArrayList<>();
+        users = new ArrayList<>();
+        userIds = new ArrayList<>();
         updateUserList();
 
-        this.player1ListView = (ListView) findViewById(R.id.player1_usernames);
-        this.player2ListView = (ListView) findViewById(R.id.player2_usernames);
+        player1ListView = (ListView) findViewById(R.id.player1_usernames);
+        player2ListView = (ListView) findViewById(R.id.player2_usernames);
         Button registerNewPlayerButton = (Button) findViewById(R.id.register_new_player_button);
         Button playButton = (Button) findViewById(R.id.play_button);
 
-        this.player1ListAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_single_choice, users);
-        this.player2ListAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_single_choice, users);
+        player1ListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, users);
+        player2ListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, users);
         player1ListView.setAdapter(player1ListAdapter);
         player2ListView.setAdapter(player2ListAdapter);
 
@@ -87,14 +83,13 @@ public class SelectPlayerActivity extends ActionBarActivity {
                 int player1 = userIds.get(player1ListView.getCheckedItemPosition());
                 int player2 = userIds.get(player2ListView.getCheckedItemPosition());
 
-                // TODO: if statements can probably be written nicer
                 if (player1 == -1 || player2 == -1) {
                     Toast.makeText(getApplicationContext(),
                             "Select a player for both players.", Toast.LENGTH_SHORT).show();
                 }
                 else if (player1 == player2 && player1 != GUEST_PLAYER_INDEX) {
                     Toast.makeText(getApplicationContext(),
-                            "Cannot play against yourself (unless you play as GUEST).", Toast.LENGTH_SHORT).show();
+                            "Cannot play against yourself (unless both play as GUEST).", Toast.LENGTH_LONG).show();
                 }
                 else {
                     Intent intent = new Intent(getApplicationContext(), GameActivity.class);
@@ -158,11 +153,6 @@ public class SelectPlayerActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
 
         if (id == R.id.action_league_table) {
             Intent intent = new Intent(getApplicationContext(), LeagueTableActivity.class);
