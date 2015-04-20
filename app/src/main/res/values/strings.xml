@@ -12,4 +12,6 @@
 
     <string name="title_activity_game">GameActivity</string>
     <string name="title_activity_league_table">LeagueTableActivity</string>
+    <string name="avatar_view_content_description">Avatar</string>
+    <string name="league_table_title">League Table</string>
 </resources>
