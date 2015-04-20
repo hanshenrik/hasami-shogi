@@ -9,6 +9,23 @@
     <ListView
         android:id="@+id/league_table_list"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/description_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/league_table_list"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/avatar_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/description_view"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="Player image" />
 
 </RelativeLayout>
