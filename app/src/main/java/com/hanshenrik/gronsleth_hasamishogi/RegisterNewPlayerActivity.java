@@ -3,6 +3,9 @@ package com.hanshenrik.gronsleth_hasamishogi;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.InputStream;
 
 
 public class RegisterNewPlayerActivity extends ActionBarActivity {
-    private EditText usernameInput, descriptionInput;
+    private EditText usernameInput, descriptionInput, imageURLInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,22 +31,39 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
 
         this.usernameInput = (EditText) findViewById(R.id.username_input);
         this.descriptionInput = (EditText) findViewById(R.id.description_input);
+        this.imageURLInput = (EditText) findViewById(R.id.image_url_input);
         Button registerButton = (Button) findViewById(R.id.register_button);
 
         usernameInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                // close keyboard, as most players won't enter description
-                return false;
+                descriptionInput.requestFocus();
+                return true;
             }
         });
 
+        descriptionInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                imageURLInput.requestFocus();
+                return true;
+            }
+        });
+
+        imageURLInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                new DownloadImageTask((ImageView) findViewById(R.id.image)).execute(v.getText().toString());
+                return false;
+            }
+        });
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("REGISTER BUTTON", "clicked!");
                 String username = usernameInput.getText().toString();
                 String description = descriptionInput.getText().toString();
+                String imageUrl = imageURLInput.getText().toString();
 
                 ContentResolver cr = getContentResolver();
                 ContentValues values = new ContentValues();
@@ -50,6 +73,7 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
                 values.put(PlayersProvider.KEY_PLAYER, username);
                 values.put(PlayersProvider.KEY_POINTS, 0);
                 values.put(PlayersProvider.KEY_DESCRIPTION, description);
+                values.put(PlayersProvider.KEY_IMAGE_URL, imageUrl);
                 // TODO: add avatar somehow. Address to file on device? (must ask for permission like in practical)
                 cr.insert(PlayersProvider.CONTENT_URI, values);
 
@@ -59,6 +83,32 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
             }
         });
     }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
 
 
     @Override

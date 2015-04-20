@@ -27,11 +27,32 @@
         android:inputType="textMultiLine"
         android:imeOptions="actionDone" />
 
+    <EditText
+        android:id="@+id/image_url_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/image_url_hint"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/description_input"
+        android:layout_marginTop="18dp"
+        android:inputType="textUri"
+        android:imeOptions="actionDone" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image_url_input"
+        android:layout_above="@+id/register_button"
+        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="Something" />
+
     <Button
+        android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
-        android:id="@+id/register_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

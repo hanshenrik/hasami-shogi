@@ -8,6 +8,7 @@
     <string name="title_activity_register_new_player">RegisterNewPlayerActivity</string>
     <string name="username_hint">Username..</string>
     <string name="description_hint">Description..</string>
+    <string name="image_url_hint">Image URL..</string>
 
     <string name="title_activity_game">GameActivity</string>
     <string name="title_activity_league_table">LeagueTableActivity</string>
