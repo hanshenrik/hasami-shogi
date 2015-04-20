@@ -93,14 +93,12 @@ public class SelectPlayerActivity extends ActionBarActivity {
 
                 // TODO: if statements can probably be written nicer
                 if (player1 == -1 || player2 == -1) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Select a player for both players.", Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getApplicationContext(),
+                            "Select a player for both players.", Toast.LENGTH_SHORT).show();
                 }
                 else if (player1 == player2 && player1 != GUEST_PLAYER_INDEX) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Cannot play against yourself (unless you play as GUEST).", Toast.LENGTH_SHORT);
-                    toast.show();
+                    Toast.makeText(getApplicationContext(),
+                            "Cannot play against yourself (unless you play as GUEST).", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Intent intent = new Intent(getApplicationContext(), GameActivity.class);
