@@ -35,19 +35,15 @@ public class Board {
         }
     }
 
-    public boolean move(int fromX, int fromY, int toX, int toY) {
+    public String move(int fromX, int fromY, int toX, int toY) {
         isTouched = true; // TODO: is there a way do only do this first time?
         if (winner != 0) {
-            Log.d("###", "Game is over, man!");
-            return false;
+            return "Game is over, man!";
         }
         try {
             validateMove(fromX, fromY, toX, toY);
         } catch (IllegalArgumentException e) {
-            // TODO: get error message and display
-            Log.d("CATCH", "catched");
-            e.printStackTrace();
-            return false;
+            return e.getMessage();
         }
 
         board[toY][toX] = board[fromY][fromX];
@@ -56,7 +52,7 @@ public class Board {
         checkWin(); // TODO: this could set a parameter that is later checked somewhere else
         printBoard();
         switchTurn();
-        return true;
+        return null;
     }
 
     private void checkCapture(int toX, int toY) {

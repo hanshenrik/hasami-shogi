@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -84,7 +85,10 @@ public class GameActivity extends ActionBarActivity {
                 } else { // indicating where to move selected piece
                     toX = x;
                     toY = y;
-                    board.move(fromX, fromY, toX, toY);
+                    String message = board.move(fromX, fromY, toX, toY);
+                    if (message != null) {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
 
                     // TODO: make this affect the boardAsList in a nicer way
                     for (int i = 0; i < Board.BOARD_SIZE; i++) {
