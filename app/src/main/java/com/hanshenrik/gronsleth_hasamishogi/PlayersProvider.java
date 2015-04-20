@@ -26,9 +26,11 @@ public class PlayersProvider extends ContentProvider {
     public static final String KEY_PLAYER = "player";
     public static final String KEY_POINTS = "points";
     public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_IMAGE_URL = "imageurl";
     public static final int PLAYER_COLUMN = 1;
     public static final int POINTS_COLUMN = 2;
     public static final int DESCRIPTION_COLUMN = 3;
+    public static final int IMAGE_URL_COLUMN = 4;
 
     private static final int PLAYERS = 1;
     private static final int PLAYER_ID = 2;
@@ -99,7 +101,7 @@ public class PlayersProvider extends ContentProvider {
         PlayersDatabaseHelper helper = new PlayersDatabaseHelper(
                 this.getContext(), DATABASE_NAME, null, DATABASE_VERSION);
         this.playersDB = helper.getWritableDatabase();
-//        helper.onUpgrade(playersDB, 1, 2);
+        // To wipe database, call helper.onUpgrade(playersDB, 1, 2);
         return (playersDB != null);
     }
 
@@ -143,9 +145,10 @@ public class PlayersProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + PLAYERS_TABLE + " (" +
                     KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    KEY_PLAYER + " TEXT," +
-                    KEY_POINTS + " INTEGER," + // TODO: not tested that INTEGER works
-                    KEY_DESCRIPTION + " TEXT);");
+                    KEY_PLAYER + " TEXT, " +
+                    KEY_POINTS + " INTEGER, " +
+                    KEY_DESCRIPTION + " TEXT, " +
+                    KEY_IMAGE_URL + " TEXT);");
         }
 
         @Override
