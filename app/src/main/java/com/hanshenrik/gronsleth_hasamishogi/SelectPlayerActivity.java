@@ -88,8 +88,8 @@ public class SelectPlayerActivity extends ActionBarActivity {
                 Log.d("PLAY", "getCheckedItemPosition() 1: " + player1ListView.getCheckedItemPosition());
                 Log.d("PLAY", "getCheckedItemPosition() 2: " + player2ListView.getCheckedItemPosition());
                 // TODO: NB! index in list is not same as ID in DB. Need to fetch that ID., and send it to GameActivity
-                int player1 = player1ListView.getCheckedItemPosition();
-                int player2 = player2ListView.getCheckedItemPosition();
+                int player1 = users.get(player1ListView.getCheckedItemPosition()).id;
+                int player2 = users.get(player2ListView.getCheckedItemPosition()).id;
 
                 // TODO: if statements can probably be written nicer
                 if (player1 == -1 || player2 == -1) {
@@ -125,20 +125,24 @@ public class SelectPlayerActivity extends ActionBarActivity {
         Cursor cursor = getContentResolver().query(PlayersProvider.CONTENT_URI, null, null, null, null);
 
         // TODO: put in detail view of player as DELETE button
-        //getContentResolver().delete(Uri.parse(PlayersProvider.CONTENT_URI + "/5"), null, null);
+        //getContentResolver().delete(Uri.parse(PlayersProvider.CONTENT_URI + "/7"), null, null);
         // NB! /# is ID in DB
 
+        // TODO: only need name and id
+        int idIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_ID);
         int nameIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_PLAYER);
         int descriptionIdx = cursor.getColumnIndexOrThrow(PlayersProvider.KEY_DESCRIPTION);
         if (cursor.moveToFirst()) {
             do {
+                int id = cursor.getInt(idIdx);
+                Log.d("###", "id: " +id);
                 String name = cursor.getString(nameIdx);
                 String description = cursor.getString(descriptionIdx);
-                users.add(new Player(name, description));
+                users.add(new Player(id, name, description, 0));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        users.add(0, new Player("GUEST", "")); // TODO: avoid creating this every time
+        users.add(0, new Player(0, "GUEST", "", 0)); // TODO: avoid creating this every time
     }
 
     private void syncUsernameLists(ListView thisListView, ListView otherListView, int position) {
@@ -172,9 +176,16 @@ public class SelectPlayerActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        if (id == R.id.action_league_table) {
+            Intent intent = new Intent(getApplicationContext(), LeagueTableActivity.class);
+            startActivity(intent);
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
