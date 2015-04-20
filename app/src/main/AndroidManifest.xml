@@ -48,6 +48,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hanshenrik.gronsleth_hasamishogi.GameActivity" />
         </activity>
+        <activity
+            android:name=".LeagueTableActivity"
+            android:label="@string/title_activity_league_table" >
+        </activity>
     </application>
 
 </manifest>

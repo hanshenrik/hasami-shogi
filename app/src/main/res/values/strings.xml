@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Gronsleth_HasamiShogi</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_league_table">League Table</string>
     <string name="action_restart">Restart</string>
@@ -11,4 +10,5 @@
     <string name="description_hint">Description..</string>
 
     <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_league_table">LeagueTableActivity</string>
 </resources>
