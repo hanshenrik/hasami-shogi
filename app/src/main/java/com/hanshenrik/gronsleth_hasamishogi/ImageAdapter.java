@@ -24,12 +24,11 @@ public class ImageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        if (convertView == null) { // if it's not recycled, initialize some
-            // attributes
+        if (convertView == null) { // if it's not recycled, initialize
             imageView = new ImageView(context);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            imageView.setAdjustViewBounds(true); // needed to adjust height, might not be needed if canvas used instead of images
+            imageView.setAdjustViewBounds(true); // needed to adjust height
         } else {
             imageView = (ImageView) convertView;
         }
