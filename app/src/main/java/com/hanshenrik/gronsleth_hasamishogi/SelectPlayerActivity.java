@@ -122,8 +122,7 @@ public class SelectPlayerActivity extends ActionBarActivity {
         // get players from PlayersProvider
         Cursor cursor = getContentResolver().query(PlayersProvider.CONTENT_URI, null, null, null, null);
 
-        // TODO: put in detail view of player as DELETE button
-        //getContentResolver().delete(Uri.parse(PlayersProvider.CONTENT_URI + "/7"), null, null);
+        // To delete player: getContentResolver().delete(Uri.parse(PlayersProvider.CONTENT_URI + "/3"), null, null);
         // NB! /# is ID in DB
 
         // TODO: only need name and id
@@ -136,11 +135,11 @@ public class SelectPlayerActivity extends ActionBarActivity {
                 Log.d("###", "id: " +id);
                 String name = cursor.getString(nameIdx);
                 String description = cursor.getString(descriptionIdx);
-                users.add(new Player(id, name, description, 0));
+                users.add(new Player(id, name, description, 0, ""));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        users.add(0, new Player(0, "GUEST", "", 0)); // TODO: avoid creating this every time
+        users.add(0, new Player(0, "GUEST", "", 0, "")); // TODO: avoid creating this every time
     }
 
     private void syncUsernameLists(ListView thisListView, ListView otherListView, int position) {
