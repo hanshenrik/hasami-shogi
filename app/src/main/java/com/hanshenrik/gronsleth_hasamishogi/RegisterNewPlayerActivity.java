@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 
 public class RegisterNewPlayerActivity extends ActionBarActivity {
+    private static final String DEFAULT_IMAGE_URL = "http://tinyurl.com/hhplace";
     private EditText usernameInput, descriptionInput, imageURLInput;
 
     @Override
@@ -53,7 +54,7 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
         imageURLInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                new DownloadImageTask((ImageView) findViewById(R.id.image)).execute(v.getText().toString());
+                new DownloadImageTask((ImageView) findViewById(R.id.image_preview)).execute(v.getText().toString());
                 return false;
             }
         });
@@ -63,6 +64,7 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
                 String username = usernameInput.getText().toString();
                 String description = descriptionInput.getText().toString();
                 String imageUrl = imageURLInput.getText().toString();
+                if (imageUrl.isEmpty()) imageUrl = DEFAULT_IMAGE_URL;
 
                 ContentResolver cr = getContentResolver();
                 ContentValues values = new ContentValues();
@@ -91,22 +93,21 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
 
         protected Bitmap doInBackground(String... urls) {
             String urlDisplay = urls[0];
-            Bitmap mIcon11 = null;
+            Bitmap bitmap = null;
             try {
                 InputStream in = new java.net.URL(urlDisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
+                bitmap = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            return mIcon11;
+            return bitmap;
         }
 
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
     }
-
 
 
     @Override
