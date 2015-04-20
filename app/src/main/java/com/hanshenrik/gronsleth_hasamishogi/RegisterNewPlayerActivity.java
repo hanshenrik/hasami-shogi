@@ -60,7 +60,6 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("REGISTER BUTTON", "clicked!");
                 String username = usernameInput.getText().toString();
                 String description = descriptionInput.getText().toString();
                 String imageUrl = imageURLInput.getText().toString();
@@ -74,7 +73,6 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
                 values.put(PlayersProvider.KEY_POINTS, 0);
                 values.put(PlayersProvider.KEY_DESCRIPTION, description);
                 values.put(PlayersProvider.KEY_IMAGE_URL, imageUrl);
-                // TODO: add avatar somehow. Address to file on device? (must ask for permission like in practical)
                 cr.insert(PlayersProvider.CONTENT_URI, values);
 
                 Intent result = new Intent();
@@ -92,10 +90,10 @@ public class RegisterNewPlayerActivity extends ActionBarActivity {
         }
 
         protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
+            String urlDisplay = urls[0];
             Bitmap mIcon11 = null;
             try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
+                InputStream in = new java.net.URL(urlDisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
