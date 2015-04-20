@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:text="Player 1" />
+        android:text="@string/player1_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/player2_label"
@@ -19,14 +20,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="Player 2" />
+        android:text="@string/player2_title"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 
     <Button
         android:id="@+id/register_new_player_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register New Player"
+        android:text="@string/register_new_player_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true" />
@@ -35,7 +37,7 @@
         android:id="@+id/play_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play"
+        android:text="@string/play_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true" />

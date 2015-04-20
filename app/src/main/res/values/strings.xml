@@ -8,10 +8,16 @@
     <string name="title_activity_register_new_player">RegisterNewPlayerActivity</string>
     <string name="username_hint">Username..</string>
     <string name="description_hint">Description..</string>
-    <string name="image_url_hint">Image URL..</string>
+    <string name="image_url_hint">Avatar URL..</string>
 
     <string name="title_activity_game">GameActivity</string>
     <string name="title_activity_league_table">LeagueTableActivity</string>
     <string name="avatar_view_content_description">Avatar</string>
     <string name="league_table_title">League Table</string>
+    <string name="register_button">Register</string>
+    <string name="image_preview_content_description">Something</string>
+    <string name="play_button">Play</string>
+    <string name="register_new_player_button">Register New Player</string>
+    <string name="player2_title">Player 2</string>
+    <string name="player1_title">Player 1</string>
 </resources>
