@@ -25,7 +25,7 @@ public class PlayersProvider extends ContentProvider {
     public static final String KEY_ID = "_id";
     public static final String KEY_PLAYER = "player";
     public static final String KEY_POINTS = "points";
-    public static final String KEY_DESCRIPTION = "points";
+    public static final String KEY_DESCRIPTION = "description";
     public static final int PLAYER_COLUMN = 1;
     public static final int POINTS_COLUMN = 2;
     public static final int DESCRIPTION_COLUMN = 3;
@@ -96,9 +96,10 @@ public class PlayersProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        CapitalsDatabaseHelper helper = new CapitalsDatabaseHelper(
+        PlayersDatabaseHelper helper = new PlayersDatabaseHelper(
                 this.getContext(), DATABASE_NAME, null, DATABASE_VERSION);
         this.playersDB = helper.getWritableDatabase();
+//        helper.onUpgrade(playersDB, 1, 2);
         return (playersDB != null);
     }
 
@@ -133,8 +134,8 @@ public class PlayersProvider extends ContentProvider {
         }
     }
 
-    private static class CapitalsDatabaseHelper extends SQLiteOpenHelper {
-        public CapitalsDatabaseHelper(Context context, String name, CursorFactory factory, int version) {
+    private static class PlayersDatabaseHelper extends SQLiteOpenHelper {
+        public PlayersDatabaseHelper(Context context, String name, CursorFactory factory, int version) {
             super(context, name, factory, version);
         }
 
