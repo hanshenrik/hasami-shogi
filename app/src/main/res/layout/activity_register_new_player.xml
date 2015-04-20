@@ -39,7 +39,7 @@
         android:imeOptions="actionDone" />
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/image_preview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image_url_input"
