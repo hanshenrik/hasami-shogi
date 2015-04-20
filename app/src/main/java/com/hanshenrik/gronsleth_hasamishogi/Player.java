@@ -1,6 +1,7 @@
 package com.hanshenrik.gronsleth_hasamishogi;
 
 public class Player {
+    private static final String SEP = ": ";
     public final String name;
     public final String description;
     public final int id;
@@ -16,6 +17,6 @@ public class Player {
     }
 
     public String toString() {
-        return this.name + " (" + this.points + ")";
+        return this.name + SEP + this.points + "p";
     }
 }
