@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -161,17 +162,17 @@ public class GameActivity extends ActionBarActivity {
         numberOfPieces = isDaiVersion ? DAI_NUMBER_OF_PIECES : DEFAULT_NUMBER_OF_PIECES;
     }
 
-    private void testMoves() { // DEV
-//        Log.d("move V", board.move(0, 1, 0, 2) + ""); // +y
-//        Log.d("move I", board.move(0, 0, 0, 4) + ""); // friendly piece in the way
-//        Log.d("move I", board.move(0, 0, 0, 2) + ""); // friendly piece at destination
-//        Log.d("move V", board.move(0, 2, 8, 2) + ""); // +x
-//        Log.d("move I", board.move(0, 2, 8, 2) + ""); // empty source position
-//        Log.d("move V", board.move(8, 7, 8, 6) + ""); // -y
-//        Log.d("move V", board.move(8, 6, 0, 6) + ""); // -x
-//        Log.d("move V", board.move(0, 0, 0, 2) + ""); //
-//        Log.d("move I", board.move(0, 6, 0, 1) + ""); // opponent piece in the way
-//        Log.d("move I", board.move(0, 6, 0, 2) + ""); // opponent piece at destination
+    private void testMoves() {
+        Log.d("move V", board.move(0, 1, 0, 2) + ""); // +y
+        Log.d("move I", board.move(0, 0, 0, 4) + ""); // friendly piece in the way
+        Log.d("move I", board.move(0, 0, 0, 2) + ""); // friendly piece at destination
+        Log.d("move V", board.move(0, 2, 8, 2) + ""); // +x
+        Log.d("move I", board.move(0, 2, 8, 2) + ""); // empty source position
+        Log.d("move V", board.move(8, 7, 8, 6) + ""); // -y
+        Log.d("move V", board.move(8, 6, 0, 6) + ""); // -x
+        Log.d("move V", board.move(0, 0, 0, 2) + ""); //
+        Log.d("move I", board.move(0, 6, 0, 1) + ""); // opponent piece in the way
+        Log.d("move I", board.move(0, 6, 0, 2) + ""); // opponent piece at destination
     }
 
 
