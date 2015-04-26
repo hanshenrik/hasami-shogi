@@ -23,7 +23,6 @@
         android:text="@string/player2_title"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-
     <Button
         android:id="@+id/register_new_player_button"
         android:layout_width="wrap_content"
@@ -54,14 +53,20 @@
             android:id="@+id/player1_usernames"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.49"
             android:choiceMode="singleChoice" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#000000"/>
 
         <ListView
             android:id="@+id/player2_usernames"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.49"
             android:choiceMode="singleChoice" />
 
     </LinearLayout>
